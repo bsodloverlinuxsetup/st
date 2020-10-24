@@ -1,0 +1,14 @@
+--- x.c
++++ x.c
+@@ -1807,6 +1814,11 @@ kpress(XEvent *ev)
+ 		len = XmbLookupString(xw.ime.xic, e, buf, sizeof buf, &ksym, &status);
+ 	else
+ 		len = XLookupString(e, buf, sizeof buf, &ksym, NULL);
++	if (IS_SET(MODE_NORMAL)) {
++		if (kpressHist(buf, len, match(ControlMask, e->state), &ksym)
++		                                      == finished) normalMode();
++		return;
++	}
+ 	/* 1. shortcuts */
+ 	for (bp = shortcuts; bp < shortcuts + LEN(shortcuts); bp++) {
+ 		if (ksym == bp->keysym && match(bp->mod, e->state)) {
